@@ -2,7 +2,10 @@ const express = require('express');
 const { allBook, bookDetail } = require('../controllers/bookController');
 const router = express.Router();
 
+// get all book
 router.get('/', allBook);
+
+// get a book detail
 router.get('/:bookId', bookDetail);
 
 // increase rating

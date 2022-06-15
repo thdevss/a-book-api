@@ -6,9 +6,7 @@ const allBook = async (req, res) => {
         offset: (typeof req.query.offset != 'undefined') ? (parseInt(req.query.offset) || 0) : 0,
         order: (typeof req.query.order != 'undefined') ? req.query.order : null
     }
-
     var rows = await book.getAllBooks(book_filter.limit, book_filter.offset, book_filter.order);
-
     res.json({
         status: true,
         data: rows

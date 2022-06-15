@@ -1,22 +1,25 @@
 const express = require('express');
-const { allBook, bookDetail } = require('../controllers/bookController');
+const { login, register, userInfo } = require('../controllers/userController');
 const router = express.Router();
+const isAuthenticate = require('../middlewares/authenticate');
 
-router.get('/', allBook);
-router.get('/:bookId', bookDetail);
+// get user's data
+router.get('/', isAuthenticate, userInfo);
 
-// increase rating
-router.post('/:bookId/rating', bookDetail);
+// login
+router.post('/login', login);
 
-// create a book
-router.post('/', bookDetail);
+// register
+router.post('/register', register);
 
-// update a book [update name/description/price only, for create user only]
-router.put('/:bookId', bookDetail);
+// get user's address
+router.get('/address', register);
 
-// delete a book [soft delete, for create user only]
-router.delete('/:bookId', bookDetail);
+// update user's address
+router.post('/address', register);
 
+// get all order from user
+router.get('/order', register);
 
 
 module.exports = router;
