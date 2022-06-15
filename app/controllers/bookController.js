@@ -20,16 +20,95 @@ const bookDetail = async (req, res) => {
     if(!row) {
         res.status(404).json({
             status: false,
+            message: `book not found`,
             data: {}
         })
+        return;
     }
 
     res.json({
         status: true,
+        message: `found a book`,
         data: row
     })
 }
+
+
+const increaseRatingOfBook = async (req, res) => {
+
+    var bookId = (parseInt(req.params.bookId) || 0)
+    if(!bookId) {
+        res.status(404).json({
+            status: false,
+            message: `book not found`,
+            data: {}
+        })
+        return;
+    }
+
+    var ratingScore = (parseFloat(req.body.ratingScore) || 0)
+    if(ratingScore > 5) {
+        res.status(500).json({
+            status: false,
+            message: `ratingScore value invalid`,
+            data: {}
+        })
+        return;
+    }
+
+    var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
+    if(isOwnerOfBook) {
+        res.status(500).json({
+            status: false,
+            message: `owner can't vote itself's book.`,
+            data: {}
+        })
+        return;
+    }
+
+    var result = await book.increaseRatingOfBook(bookId, req.user.id, ratingScore)
+
+    res.json({
+        status: result.status,
+        message: result.message,
+        data: {}
+    })
+}
+
+const deleteBook = async (req, res) => {
+
+    var bookId = (parseInt(req.params.bookId) || 0)
+    if(!bookId) {
+        res.status(404).json({
+            status: false,
+            message: `book not found`,
+            data: {}
+        })
+        return;
+    }
+
+    var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
+    if(!isOwnerOfBook) {
+        res.status(500).json({
+            status: false,
+            message: `only owner can delete this book`,
+            data: {}
+        })
+        return;
+    }
+
+    var result = await book.deleteBook(bookId, req.user.id)
+
+    res.json({
+        status: result.status,
+        message: result.message,
+        data: {}
+    })
+}
+
 module.exports =  {
     allBook,
-    bookDetail
+    bookDetail,
+    increaseRatingOfBook,
+    deleteBook
 };

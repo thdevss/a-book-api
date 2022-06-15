@@ -1,6 +1,7 @@
 const express = require('express');
-const { allBook, bookDetail } = require('../controllers/bookController');
+const { allBook, bookDetail, increaseRatingOfBook, deleteBook } = require('../controllers/bookController');
 const router = express.Router();
+const isAuthenticate = require('../middlewares/authenticate');
 
 // get all book
 router.get('/', allBook);
@@ -9,7 +10,7 @@ router.get('/', allBook);
 router.get('/:bookId', bookDetail);
 
 // increase rating
-router.post('/:bookId/rating', bookDetail);
+router.post('/:bookId/rating', isAuthenticate, increaseRatingOfBook);
 
 // create a book
 router.post('/', bookDetail);
@@ -18,7 +19,7 @@ router.post('/', bookDetail);
 router.put('/:bookId', bookDetail);
 
 // delete a book [soft delete, for create user only]
-router.delete('/:bookId', bookDetail);
+router.delete('/:bookId', isAuthenticate, deleteBook);
 
 
 
