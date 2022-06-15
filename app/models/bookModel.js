@@ -158,11 +158,109 @@ const deleteBook = async (bookId = 0, userId = 0) => {
 }
 
 
+
+const addNewBook = async (bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, userId = 0) => {
+
+
+    let query_str = `INSERT INTO tb_book (name, description, price, discount_percent, user_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())`
+    let query_data = [
+        bookName,
+        bookDescription,
+        bookPrice,
+        bookDiscountPercent,
+        userId
+    ];
+    
+    try {
+        const [ rows ] = await conn.execute(query_str, query_data);
+        
+        if(rows.affectedRows == 1) {
+            return {
+                status: true,
+                message: `inserted!`,
+                id: rows.insertId
+            };
+        }
+    } catch (error) {
+        return {
+            status: false,
+            message: `can't insert book: ${error.code}`
+        };
+    }
+
+
+    return {
+        status: false,
+        message: `not thing to do!`
+    };
+}
+
+const updateBook = async (bookId = 0, bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, isActive = null, userId = 0) => {
+
+
+    let query_str = `UPDATE tb_book SET `
+    let query_data = [];
+
+    if(bookName) {
+        query_str += `name = ?, `
+        query_data.push(bookName)
+    }
+    if(bookDescription) {
+        query_str += `description = ?, `
+        query_data.push(bookDescription)
+    }
+    if(bookPrice) {
+        query_str += `price = ?, `
+        query_data.push(bookPrice)
+    }
+    if(bookDiscountPercent) {
+        query_str += `discount_percent = ?, `
+        query_data.push(bookDiscountPercent)
+    }
+    if(isActive == 0 || isActive == 1) {
+        query_str += `is_active = ?, `
+        query_data.push(isActive)
+    }
+    
+
+    query_str += ` updated_at = NOW() WHERE id = ? AND user_id = ? `;
+    query_data.push(bookId)
+    query_data.push(userId)
+
+    try {
+        const [ rows ] = await conn.execute(query_str, query_data);
+        console.log( query_str, query_data)
+        
+        if(rows.affectedRows == 1) {
+            return {
+                status: true,
+                message: `updated!`,
+                id: rows.insertId
+            };
+        }
+    } catch (error) {
+        console.log(error, query_str, query_data)
+        return {
+            status: false,
+            message: `can't update book: ${error.code}`
+        };
+    }
+
+
+    return {
+        status: false,
+        message: `not thing to do!`
+    };
+}
+
+
 module.exports = { 
     getAllBooks,
     getOneBook,
     increaseRatingOfBook,
     isOwnerOfBook,
-    deleteBook
+    deleteBook,
+    addNewBook,
+    updateBook
 };
 

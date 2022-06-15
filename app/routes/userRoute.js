@@ -13,13 +13,13 @@ router.post('/login', login);
 router.post('/register', register);
 
 // get user's address
-router.get('/address', register);
+router.get('/address', isAuthenticate, userInfo);
 
 // update user's address
-router.post('/address', register);
+router.post('/address', isAuthenticate, userInfo);
 
 // get all order from user
-router.get('/order', register);
+router.get('/order', isAuthenticate, userInfo);
 
 
 module.exports = router;

@@ -1,15 +1,16 @@
 const express = require('express');
 const { allBook, bookDetail } = require('../controllers/bookController');
 const router = express.Router();
+const isAuthenticate = require('../middlewares/authenticate');
 
 // get product in cart
-router.get('/', allBook);
+router.get('/', isAuthenticate, allBook);
 
 // add this product to cart
-router.post('/', bookDetail);
+router.post('/', isAuthenticate, bookDetail);
 
 // delete product from cart
-router.delete('/:bookId', bookDetail);
+router.delete('/:bookId', isAuthenticate, bookDetail);
 
 
 module.exports = router;

@@ -106,9 +106,128 @@ const deleteBook = async (req, res) => {
     })
 }
 
+const addNewBook = async (req, res) => {
+    var bookPrice = (parseInt(req.body.price) || 0)
+    if(!bookPrice || bookPrice < 1) {
+        res.status(500).json({
+            status: false,
+            message: `price not valid`,
+            data: {}
+        })
+        return;
+    }
+    var bookDiscountPercent = (parseInt(req.body.discount_percent) || 0)
+    if(bookDiscountPercent < 0) {
+        res.status(500).json({
+            status: false,
+            message: `discount_percent not valid`,
+            data: {}
+        })
+        return;
+    }
+
+    var bookName = req.body.name
+    if(!bookName) {
+        res.status(500).json({
+            status: false,
+            message: `name must not null`,
+            data: {}
+        })
+        return;
+    }
+
+    var result = await book.addNewBook(
+        bookName,
+        req.body.description,
+        bookPrice,
+        bookDiscountPercent,
+        req.user.id
+    )
+
+    res.json({
+        status: result.status,
+        message: result.message,
+        data: (await book.getOneBook(result.id))
+    })
+}
+
+const updateBook = async (req, res) => {
+    var bookId = (parseInt(req.params.bookId) || 0)
+    if(!bookId) {
+        res.status(404).json({
+            status: false,
+            message: `book not found`,
+            data: {}
+        })
+        return;
+    }
+
+    var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
+    if(!isOwnerOfBook) {
+        res.status(500).json({
+            status: false,
+            message: `only owner can delete this book`,
+            data: {}
+        })
+        return;
+    }
+
+    var bookPrice = (parseInt(req.body.price) || 0)
+    if(bookPrice < 1) {
+        res.status(500).json({
+            status: false,
+            message: `price not valid`,
+            data: {}
+        })
+        return;
+    }
+
+    var bookDiscountPercent = (parseInt(req.body.discount_percent) || 0)
+    if(bookDiscountPercent < 0) {
+        res.status(500).json({
+            status: false,
+            message: `discount_percent not valid`,
+            data: {}
+        })
+        return;
+    }
+
+    var isActive = (parseInt(req.body.is_active))
+    if(isActive != 0 && isActive != 1) {
+        res.status(500).json({
+            status: false,
+            message: `is_active not valid (boolean only 0/1)`,
+            data: {}
+        })
+        return;
+    }
+    console.log(req.body.is_active, isActive)
+
+
+    var bookName = req.body.name
+    var result = await book.updateBook(
+        bookId,
+        bookName,
+        req.body.description,
+        bookPrice,
+        bookDiscountPercent,
+        isActive,
+        req.user.id
+    )
+
+    res.json({
+        status: result.status,
+        message: result.message,
+        data: (await book.getOneBook(bookId))
+    })
+}
+
+
 module.exports =  {
     allBook,
     bookDetail,
     increaseRatingOfBook,
-    deleteBook
+    deleteBook,
+    addNewBook,
+    updateBook
 };
