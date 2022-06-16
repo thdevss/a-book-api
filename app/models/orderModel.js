@@ -3,6 +3,7 @@ const cartModel = require('./cartModel.js');
 const userAddressModel = require('./userAddressModel.js');
 const paymentModel = require('./paymentModel.js');
 const shippingModel = require('./shippingModel.js');
+const userModel = require('./userModel.js');
 
 
 const checkDataBeforeOrder = async (bookObj = {}, userAddressObj = {}, shippingObj = {}, paymentObj = {}) => {
@@ -113,11 +114,12 @@ const createNewOrder = async (userId = 0, addressId = 0, shippingId = 0, payment
         }
     } else {
         
+        var userInfo = await userModel.getOneUser(userId)
         // -- create new order here
         var summary_price = await calcSummaryPrice(booksInCart.data, shippingInformation.data)
 
         // create in tb_order
-        var ins_master_query_str = `INSERT INTO tb_order (user_id, book_quantity, total_book_price, total_shipping_price, total_grand_price, payment_id, payment_name, shipping_id, shipping_name, shipping_price_per_piece, address_id, address_1, address_2, address_sub_district, address_district, address_province, address_postel_code, address_country, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`
+        var ins_master_query_str = `INSERT INTO tb_order (user_id, book_quantity, total_book_price, total_shipping_price, total_grand_price, payment_id, payment_name, shipping_id, shipping_name, shipping_price_per_piece, address_id, address_1, address_2, address_sub_district, address_district, address_province, address_postel_code, address_country, first_name, last_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? NOW())`
         
         var ins_master_query_data = [
             userId,
@@ -137,7 +139,10 @@ const createNewOrder = async (userId = 0, addressId = 0, shippingId = 0, payment
             userAddress.data.address_district,
             userAddress.data.address_province,
             userAddress.data.address_postel_code,
-            userAddress.data.address_country
+            userAddress.data.address_country,
+            userInfo.data.first_name,
+            userInfo.data.last_name,
+
         ];
 
         var orderId = 0;
@@ -244,7 +249,7 @@ const getOneOrder = async (userId = 0, orderId = 0) => {
             row.total_shipping_price = parseFloat(row.total_shipping_price)
             row.total_grand_price = parseFloat(row.total_grand_price)
         })
-        
+
         rowOrder[0].total_book_price = parseFloat(rowOrder[0].total_book_price)
         rowOrder[0].total_shipping_price = parseFloat(rowOrder[0].total_shipping_price)
         rowOrder[0].total_grand_price = parseFloat(rowOrder[0].total_grand_price)

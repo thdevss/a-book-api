@@ -17,9 +17,9 @@ const isAuthenticate = async (req, res, next) => {
       });
     }
 
-    let user = await userModel.get(decoded.id);
-    if (user) {
-      req.user = user;
+    let user = await userModel.getOneUser(decoded.id);
+    if (user.status) {
+      req.user = user.data;
       next();
     } else {
       return res.status(401).send({

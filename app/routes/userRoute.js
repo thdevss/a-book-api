@@ -4,15 +4,16 @@ const userAddressController = require('../controllers/userAddressController');
 
 const router = express.Router();
 const isAuthenticate = require('../middlewares/authenticate');
+const validation = require('../middlewares/validation');
 
 // get user's data
 router.get('/', isAuthenticate, userController.userInfo);
 
 // login
-router.post('/login', userController.login);
+router.post('/login', validation.loginValidation, userController.login);
 
 // register
-router.post('/register', userController.register);
+router.post('/register', validation.registerValidation, userController.register);
 
 // get user's all address
 router.get('/address', isAuthenticate, userAddressController.getUserAddress);
