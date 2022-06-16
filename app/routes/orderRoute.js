@@ -7,7 +7,7 @@ const isAuthenticate = require('../middlewares/authenticate');
 router.get('/', isAuthenticate, orderController.previewBeforeOrder);
 
 // // save master-detail order
-// router.post('/', isAuthenticate, bookDetail);
+router.post('/', isAuthenticate, orderController.createNewOrder);
 
 // // get order detail by id [for create user only]
 // router.get('/:orderId', isAuthenticate, bookDetail);

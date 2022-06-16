@@ -16,7 +16,7 @@ const getAllBooksInCart = async (userId = 0) => {
     const [ rows ] = await conn.execute(query_str, query_data);
     if(rows.length > 0) {
 
-        rows.data.forEach( (row) => {
+        rows.forEach( (row) => {
             row.price = parseFloat(row.price)
             row.total_price = parseFloat(row.total_price)
         })

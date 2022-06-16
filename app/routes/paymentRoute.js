@@ -1,9 +1,9 @@
 const express = require('express');
-const { allBook, bookDetail } = require('../controllers/bookController');
+const paymentController = require('../controllers/paymentController');
 const router = express.Router();
 
 // Get payment lists available in website.
-router.get('/', bookDetail);
+router.get('/', paymentController.getAllPayment);
 
 
 module.exports = router;

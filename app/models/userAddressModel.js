@@ -40,7 +40,18 @@ const getOneAddress = async (addressId = 0, userId = 0) => {
     console.log(query_str, query_data)
 
     const [ rows ] = await conn.execute(query_str, query_data);
-    return rows[0];
+
+    if(rows.length == 1) {
+        return {
+            status: true,
+            data: rows[0]
+        }
+    }
+
+    return {
+        status: false,
+        data: []
+    };
 }
 
 const addNewAddress = async (userId = 0, address1 = null, address2 = null, addressSubDistrict = null, addressDistrict = null, addressProvince = null, addressPostelCode = null, addressCountry = null, is_default = 1) => {

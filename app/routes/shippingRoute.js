@@ -1,9 +1,9 @@
 const express = require('express');
-const { allBook, bookDetail } = require('../controllers/bookController');
+const shippingController = require('../controllers/shippingController');
 const router = express.Router();
 
 // Get shipping lists available in website.
-router.get('/', allBook);
+router.get('/', shippingController.getAllShipping);
 
 
 module.exports = router;
