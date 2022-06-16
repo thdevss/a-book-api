@@ -159,11 +159,12 @@ const deleteBook = async (bookId = 0, userId = 0) => {
 
 
 
-const addNewBook = async (bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, userId = 0) => {
+const addNewBook = async (bookISBN = null, bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, userId = 0) => {
 
 
-    let query_str = `INSERT INTO tb_book (name, description, price, discount_percent, user_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())`
+    let query_str = `INSERT INTO tb_book (name, isbn, description, price, discount_percent, user_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())`
     let query_data = [
+        bookISBN,
         bookName,
         bookDescription,
         bookPrice,
@@ -195,7 +196,7 @@ const addNewBook = async (bookName = null, bookDescription = null, bookPrice = 0
     };
 }
 
-const updateBook = async (bookId = 0, bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, isActive = null, userId = 0) => {
+const updateBook = async (bookId = 0, bookISBN = null, bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, isActive = null, userId = 0) => {
 
 
     let query_str = `UPDATE tb_book SET `
@@ -204,6 +205,10 @@ const updateBook = async (bookId = 0, bookName = null, bookDescription = null, b
     if(bookName) {
         query_str += `name = ?, `
         query_data.push(bookName)
+    }
+    if(bookISBN) {
+        query_str += `isbn = ?, `
+        query_data.push(bookISBN)
     }
     if(bookDescription) {
         query_str += `description = ?, `

@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel.js');
+
 const jwt = require('jsonwebtoken');
 const config = require("../configs/auth.config.js");
 
@@ -42,6 +43,10 @@ const userInfo = async (req, res) => {
 const register = async (req, res) => {
 
 }
+
+
+
+
 module.exports =  {
     login,
     register,

@@ -137,6 +137,7 @@ const addNewBook = async (req, res) => {
     }
 
     var result = await book.addNewBook(
+        req.body.bookISBN,
         bookName,
         req.body.description,
         bookPrice,
@@ -207,6 +208,7 @@ const updateBook = async (req, res) => {
     var bookName = req.body.name
     var result = await book.updateBook(
         bookId,
+        req.body.bookISBN,
         bookName,
         req.body.description,
         bookPrice,

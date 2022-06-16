@@ -7,7 +7,7 @@ const get = async (userId = 0) => {
         return {}
     }
 
-    let query_str = `SELECT id, email FROM tb_user WHERE id = ?`
+    let query_str = `SELECT id, email, firstname, lastname, phonenumber FROM tb_user WHERE id = ?`
     let query_data = [];
     query_data.push(userId)
 

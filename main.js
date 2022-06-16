@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 app.use('/book', require('./app/routes/bookRoute'));
 app.use('/user', require('./app/routes/userRoute'));
+app.use('/cart', require('./app/routes/cartRoute'));
 
 app.use(passport.initialize());
 
