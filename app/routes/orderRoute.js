@@ -10,7 +10,7 @@ router.get('/', isAuthenticate, orderController.previewBeforeOrder);
 router.post('/', isAuthenticate, orderController.createNewOrder);
 
 // // get order detail by id [for create user only]
-// router.get('/:orderId', isAuthenticate, bookDetail);
+router.get('/:orderId', isAuthenticate, orderController.getOneOrder);
 
 // // save payment detail for this order [for create user only]
 // router.get('/:orderId/payment', isAuthenticate, bookDetail);

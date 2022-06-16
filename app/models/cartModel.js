@@ -8,7 +8,7 @@ const getAllBooksInCart = async (userId = 0) => {
         };
     }
 
-    let query_str = `SELECT tb_book.id, tb_book.name, tb_book.price, tb_book.discount_percent, ( (tb_book.price*((100-tb_book.discount_percent)/100))*tb_cart.quantity ) as total_price, tb_cart.quantity FROM tb_cart INNER JOIN tb_book ON tb_book.id = tb_cart.book_id WHERE tb_cart.user_id = ?`
+    let query_str = `SELECT tb_book.id, tb_book.name, tb_book.isbn, tb_book.price, tb_book.discount_percent, ( (tb_book.price*((100-tb_book.discount_percent)/100))*tb_cart.quantity ) as total_price, tb_cart.quantity FROM tb_cart INNER JOIN tb_book ON tb_book.id = tb_cart.book_id WHERE tb_cart.user_id = ?`
     let query_data = [
         userId
     ];
