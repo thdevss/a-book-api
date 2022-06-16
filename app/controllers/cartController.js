@@ -9,8 +9,6 @@ const getAllBooksInCart = async (req, res) => {
     if(books) {
         var total_price = 0;
         books.data.forEach( (product) => {
-            product.price = parseFloat(product.price)
-            product.total_price = parseFloat(product.total_price)
             total_price += product.total_price
         })
         res.json({ 

@@ -18,16 +18,25 @@ const getAllAddress = async (userId = 0) => {
 }
 
 const getOneAddress = async (addressId = 0, userId = 0) => {
-    if(userId < 1 || addressId < 1) {
+    if(userId < 1) {
         return {}
     }
 
-    let query_str = `SELECT * FROM tb_user_address WHERE user_id = ? AND id = ?`
+    let query_str = `SELECT * FROM tb_user_address WHERE user_id = ? `
     let query_data = [
-        userId,
-        addressId
+        userId
     ];
 
+    if(addressId > 0) {
+        query_str += ` AND id = ? `;
+        query_data.push(addressId)
+    } else {
+        query_str += ` AND is_default = 1 `
+    }
+
+    
+
+    query_str += ` LIMIT 1 `
     console.log(query_str, query_data)
 
     const [ rows ] = await conn.execute(query_str, query_data);
