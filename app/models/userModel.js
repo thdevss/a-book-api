@@ -95,6 +95,9 @@ const register = async (email = null, password = null, firstName = null, lastNam
         }
     }
 
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
+
     let query_str = `INSERT INTO tb_user (email, password, first_name, last_name, phone_number) VALUES (?, ?, ?, ?, ?)`
     let query_data = [
         email,

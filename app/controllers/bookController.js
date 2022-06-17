@@ -1,4 +1,5 @@
 const book = require('../models/bookModel.js');
+const {validationResult} = require('express-validator');
 
 const allBook = async (req, res) => {
     var book_filter = {
@@ -7,9 +8,18 @@ const allBook = async (req, res) => {
         order: (typeof req.query.order != 'undefined') ? req.query.order : null
     }
     var rows = await book.getAllBooks(book_filter.limit, book_filter.offset, book_filter.order);
-    res.json({
-        status: true,
-        data: rows
+
+    if(rows.length > 0) {
+        return res.json({
+            success: true,
+            data: rows
+        })
+    }
+
+
+    return res.status(200).json({
+        success: false,
+        data: []
     })
 }
 
@@ -17,17 +27,16 @@ const bookDetail = async (req, res) => {
     var bookId = (parseInt(req.params.bookId) || 0)
     var row = await book.getOneBook(bookId);
     
-    if(!row) {
-        res.status(404).json({
-            status: false,
+    if(!row || !row.id) {
+        return res.status(404).json({
+            success: false,
             message: `book not found`,
             data: {}
         })
-        return;
     }
 
-    res.json({
-        status: true,
+    return res.json({
+        success: true,
         message: `found a book`,
         data: row
     })
@@ -36,43 +45,60 @@ const bookDetail = async (req, res) => {
 
 const increaseRatingOfBook = async (req, res) => {
 
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            success: false,
+            message: `input not valid`,
+            data: errors.array()
+        });
+    }
+    
+
     var bookId = (parseInt(req.params.bookId) || 0)
     if(!bookId) {
-        res.status(404).json({
-            status: false,
+        return res.status(404).json({
+            success: false,
             message: `book not found`,
             data: {}
         })
-        return;
     }
 
     var ratingScore = (parseFloat(req.body.ratingScore) || 0)
-    if(ratingScore > 5) {
-        res.status(500).json({
-            status: false,
+    if(ratingScore > 5 || ratingScore < 1) {
+        return res.status(500).json({
+            success: false,
             message: `ratingScore value invalid`,
             data: {}
         })
-        return;
     }
 
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(isOwnerOfBook) {
-        res.status(500).json({
-            status: false,
+        return res.status(500).json({
+            success: false,
             message: `owner can't vote itself's book.`,
             data: {}
         })
-        return;
     }
 
     var result = await book.increaseRatingOfBook(bookId, req.user.id, ratingScore)
 
-    res.json({
+    if(result.status) {
+        return res.json({
+            status: result.status,
+            message: result.message,
+            data: {}
+        })
+    }
+
+    return res.status(500).json({
         status: result.status,
         message: result.message,
         data: {}
     })
+    
 }
 
 const deleteBook = async (req, res) => {
@@ -80,7 +106,7 @@ const deleteBook = async (req, res) => {
     var bookId = (parseInt(req.params.bookId) || 0)
     if(!bookId) {
         res.status(404).json({
-            status: false,
+            success: false,
             message: `book not found`,
             data: {}
         })
@@ -90,7 +116,7 @@ const deleteBook = async (req, res) => {
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(!isOwnerOfBook) {
         res.status(500).json({
-            status: false,
+            success: false,
             message: `only owner can delete this book`,
             data: {}
         })
@@ -99,7 +125,15 @@ const deleteBook = async (req, res) => {
 
     var result = await book.deleteBook(bookId, req.user.id)
 
-    res.json({
+    if(result.status) {
+        return res.status(204).json({
+            status: result.status,
+            message: result.message,
+            data: {}
+        })
+    }
+
+    return res.status(500).json({
         status: result.status,
         message: result.message,
         data: {}
@@ -109,17 +143,17 @@ const deleteBook = async (req, res) => {
 const addNewBook = async (req, res) => {
     var bookPrice = (parseInt(req.body.price) || 0)
     if(!bookPrice || bookPrice < 1) {
-        res.status(500).json({
-            status: false,
+        res.status(400).json({
+            success: false,
             message: `price not valid`,
             data: {}
         })
         return;
     }
     var bookDiscountPercent = (parseInt(req.body.discount_percent) || 0)
-    if(bookDiscountPercent < 0) {
-        res.status(500).json({
-            status: false,
+    if(bookDiscountPercent < 0 || bookDiscountPercent > 100) {
+        res.status(400).json({
+            success: false,
             message: `discount_percent not valid`,
             data: {}
         })
@@ -128,8 +162,8 @@ const addNewBook = async (req, res) => {
 
     var bookName = req.body.name
     if(!bookName) {
-        res.status(500).json({
-            status: false,
+        res.status(400).json({
+            success: false,
             message: `name must not null`,
             data: {}
         })
@@ -145,7 +179,7 @@ const addNewBook = async (req, res) => {
         req.user.id
     )
 
-    res.json({
+    res.status(201).json({
         status: result.status,
         message: result.message,
         data: (await book.getOneBook(result.id))
@@ -156,7 +190,7 @@ const updateBook = async (req, res) => {
     var bookId = (parseInt(req.params.bookId) || 0)
     if(!bookId) {
         res.status(404).json({
-            status: false,
+            success: false,
             message: `book not found`,
             data: {}
         })
@@ -166,7 +200,7 @@ const updateBook = async (req, res) => {
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(!isOwnerOfBook) {
         res.status(500).json({
-            status: false,
+            success: false,
             message: `only owner can delete this book`,
             data: {}
         })
@@ -175,8 +209,8 @@ const updateBook = async (req, res) => {
 
     var bookPrice = (parseInt(req.body.price) || 0)
     if(bookPrice < 1) {
-        res.status(500).json({
-            status: false,
+        res.status(400).json({
+            success: false,
             message: `price not valid`,
             data: {}
         })
@@ -185,8 +219,8 @@ const updateBook = async (req, res) => {
 
     var bookDiscountPercent = (parseInt(req.body.discount_percent) || 0)
     if(bookDiscountPercent < 0) {
-        res.status(500).json({
-            status: false,
+        res.status(400).json({
+            success: false,
             message: `discount_percent not valid`,
             data: {}
         })
@@ -195,8 +229,8 @@ const updateBook = async (req, res) => {
 
     var isActive = (parseInt(req.body.is_active))
     if(isActive != 0 && isActive != 1) {
-        res.status(500).json({
-            status: false,
+        res.status(400).json({
+            success: false,
             message: `is_active not valid (boolean only 0/1)`,
             data: {}
         })

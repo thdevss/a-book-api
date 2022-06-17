@@ -42,6 +42,13 @@ const addBookToCart = async (userId = 0, bookId = 0, qty = 0) => {
         }
     }
 
+    if(qty < 1) {
+        return {
+            status: false,
+            message: `qty must have`
+        }
+    }
+
     // check book is_delete = 0 and is_active = 1 ?
     const [ book ] = await conn.execute(`SELECT COUNT(*) as count FROM tb_book WHERE is_delete = 0 AND is_active = 1 AND id = ?`, [ bookId ]);
     if(parseInt(book[0].count) != 1) {

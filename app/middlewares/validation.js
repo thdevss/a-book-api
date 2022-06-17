@@ -51,8 +51,51 @@ const loginValidation = checkSchema({
     }
 });
 
+const addToCartValidation = checkSchema({
+    book_id: {
+        notEmpty: true,
+        isNumeric: true
+    },
+    quantity: {
+        notEmpty: true,
+        isNumeric: true
+    }
+});
+
+const orderValidation = checkSchema({
+    payment_id: {
+        isInt: true,
+        notEmpty: false,
+        optional: true
+    },
+    shipping_id: {
+        isInt: true,
+        notEmpty: false,
+        optional: true
+    },
+    address_id: {
+        isInt: true,
+        notEmpty: false,
+        optional: true
+    }
+});
+
+
+const ratingValidation = checkSchema({
+    ratingScore: {
+        isInt: {
+            min: 1,
+            max: 5
+        },
+        notEmpty: true,
+
+    }
+});
 
 module.exports = {
     registerValidation,
-    loginValidation
+    loginValidation,
+    addToCartValidation,
+    orderValidation,
+    ratingValidation
 };

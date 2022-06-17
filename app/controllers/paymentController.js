@@ -6,7 +6,7 @@ const getAllPayment = async (req, res) => {
     if(result.status) {
         
         res.json({ 
-            status: true,
+            success: true,
             message: result.message,
             data: result.data
         });
@@ -14,7 +14,7 @@ const getAllPayment = async (req, res) => {
     }
 
     res.status(200).json({
-        status: false,
+        success: false,
         message: result.message,
         data: {}
     })

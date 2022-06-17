@@ -1,19 +1,15 @@
 const userModel = require('../models/userModel.js');
 const userAddressModel = require('../models/userAddressModel.js');
 
-const jwt = require('jsonwebtoken');
-const config = require("../configs/auth.config.js");
-
-
 const getUserAddress = async (req, res) => {
-    console.log(req.user)
-    var user = await userModel.get(req.user.id);
+
+    var user = await userModel.getOneUser(req.user.id);
     if(user) {
         var userAddress = await userAddressModel.getAllAddress(req.user.id);
         res.json({ 
-            status: true,
+            success: true,
             data: {
-                user: user,
+                user: user.data,
                 address: userAddress
             }
         });
@@ -21,8 +17,8 @@ const getUserAddress = async (req, res) => {
     }
 
     res.status(401).json({
-        status: false,
-        data: []
+        success: false,
+        data: {}
     })
 }
 

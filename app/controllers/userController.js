@@ -11,7 +11,7 @@ const login = async (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            status: false,
+            success: false,
             message: `input not valid`,
             data: errors.array()
         });
@@ -23,7 +23,7 @@ const login = async (req, res) => {
         let payload = { id: result.data.id };
         let token = jwt.sign(payload, config.secret);
         res.json({ 
-            status: true,
+            success: true,
             message: result.message,
             token: token
         });
@@ -31,7 +31,7 @@ const login = async (req, res) => {
     }
 
     res.status(401).json({
-        status: false,
+        success: false,
         message: result.message,
         token: ''
     })
@@ -42,14 +42,14 @@ const userInfo = async (req, res) => {
     var result = await userModel.getOneUser(req.user.id);
     if(result.status) {
         res.json({ 
-            status: true,
+            success: true,
             data: result.data
         });
         return;
     }
 
     res.status(401).json({
-        status: false,
+        success: false,
         message: user.message,
         data: {}
     })
@@ -61,7 +61,7 @@ const register = async (req, res) => {
 
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            status: false,
+            success: false,
             message: `input not valid`,
             data: errors.array()
         });
@@ -70,14 +70,14 @@ const register = async (req, res) => {
     var result = await userModel.register(req.body.email, req.body.password, req.body.first_name, req.body.last_name, req.body.phone_number);
     if(result.status) {
         res.json({ 
-            status: true,
+            success: true,
             message: `registered succeed`,
         });
         return;
     }
 
     res.status(401).json({
-        status: false,
+        success: false,
         message: result.message,
     })
 }
