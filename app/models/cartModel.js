@@ -89,6 +89,7 @@ const deleteBookFromCart = async (userId = 0, bookId = 0) => {
     if(!userId || !bookId) {
         return {
             status: false,
+            code: 400,
             message: `input val not valid`
         }
     }
@@ -97,6 +98,7 @@ const deleteBookFromCart = async (userId = 0, bookId = 0) => {
     if(parseInt(book[0].count) != 1) {
         return {
             status: false,
+            code: 404,
             message: `this book was deleted / not found`
         };
     }
@@ -112,11 +114,13 @@ const deleteBookFromCart = async (userId = 0, bookId = 0) => {
         const [ rows ] = await conn.execute(query_str, query_data);
         return {
             status: true,
+            code: 204,
             message: `deleted a book in cart!`,
         };
     } catch(error) {
         return {
             status: false,
+            code: 500,
             message: `can't delete a book in cart: ${error.code}`
         };
     }

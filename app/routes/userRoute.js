@@ -19,7 +19,7 @@ router.post('/register', validation.registerValidation, userController.register)
 router.get('/address', isAuthenticate, userAddressController.getUserAddress);
 
 // update user's some address
-router.post('/address', isAuthenticate, userAddressController.addNewAddress);
+router.post('/address', [isAuthenticate, validation.addressValidation], userAddressController.addNewAddress);
 router.put('/address/:addressId', isAuthenticate, userAddressController.getUserAddress);
 router.delete('/address/:addressId', isAuthenticate, userAddressController.getUserAddress);
 

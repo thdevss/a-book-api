@@ -119,7 +119,7 @@ const createNewOrder = async (userId = 0, addressId = 0, shippingId = 0, payment
         var summary_price = await calcSummaryPrice(booksInCart.data, shippingInformation.data)
 
         // create in tb_order
-        var ins_master_query_str = `INSERT INTO tb_order (user_id, book_quantity, total_book_price, total_shipping_price, total_grand_price, payment_id, payment_name, shipping_id, shipping_name, shipping_price_per_piece, address_id, address_1, address_2, address_sub_district, address_district, address_province, address_postel_code, address_country, first_name, last_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? NOW())`
+        var ins_master_query_str = `INSERT INTO tb_order (user_id, book_quantity, total_book_price, total_shipping_price, total_grand_price, payment_id, payment_name, shipping_id, shipping_name, shipping_price_per_piece, address_id, address_1, address_2, address_sub_district, address_district, address_province, address_postel_code, address_country, first_name, last_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`
         
         var ins_master_query_data = [
             userId,
@@ -153,6 +153,7 @@ const createNewOrder = async (userId = 0, addressId = 0, shippingId = 0, payment
                 orderId = created.insertId
             }
         } catch (error) {
+            console.log(error)
             return {
                 status: false,
                 message: `can't create order: ${error.code}`

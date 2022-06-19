@@ -23,7 +23,7 @@ const getAllBooksInCart = async (req, res) => {
         return;
     }
 
-    res.status(401).json({
+    res.status(204).json({
         success: true,
         data: {}
     })
@@ -42,6 +42,15 @@ const addBookToCart = async (req, res) => {
             data: errors.array()
         });
     }
+
+    if(req.body.quantity < 1) {
+        res.status(400).json({
+            success: false,
+            message: `qty must > 0`
+        })
+        return;
+    }
+
     
     var result = await cartModel.addBookToCart(req.user.id, req.body.book_id, req.body.quantity);
     if(result.status) {
@@ -52,41 +61,32 @@ const addBookToCart = async (req, res) => {
         return;
     } else {
         res.status(500).json({
-            success: true,
+            success: false,
             message: result.message,
-            data: {}
         })
         return;
     }
 
-    res.status(401).json({
-        success: true,
-        data: {}
-    })
 }
 
 const deleteBookFromCart = async (req, res) => {
 
     var result = await cartModel.deleteBookFromCart(req.user.id, req.params.bookId);
     if(result.status) {
-        res.json({ 
+        res.status(result.code).json({ 
             success: true,
             message: result.message
         });
         return;
     } else {
-        res.status(500).json({
-            success: true,
+        res.status(result.code).json({
+            success: false,
             message: result.message,
             data: {}
         })
         return;
     }
 
-    res.status(401).json({
-        success: true,
-        data: {}
-    })
 }
 
 

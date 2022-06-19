@@ -67,7 +67,7 @@ const increaseRatingOfBook = async (req, res) => {
 
     var ratingScore = (parseFloat(req.body.ratingScore) || 0)
     if(ratingScore > 5 || ratingScore < 1) {
-        return res.status(500).json({
+        return res.status(400).json({
             success: false,
             message: `ratingScore value invalid`,
             data: {}
@@ -76,7 +76,7 @@ const increaseRatingOfBook = async (req, res) => {
 
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(isOwnerOfBook) {
-        return res.status(500).json({
+        return res.status(403).json({
             success: false,
             message: `owner can't vote itself's book.`,
             data: {}
@@ -115,7 +115,7 @@ const deleteBook = async (req, res) => {
 
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(!isOwnerOfBook) {
-        res.status(500).json({
+        res.status(403).json({
             success: false,
             message: `only owner can delete this book`,
             data: {}
@@ -127,14 +127,14 @@ const deleteBook = async (req, res) => {
 
     if(result.status) {
         return res.status(204).json({
-            status: result.status,
+            success: result.status,
             message: result.message,
             data: {}
         })
     }
 
     return res.status(500).json({
-        status: result.status,
+        success: result.status,
         message: result.message,
         data: {}
     })
@@ -199,9 +199,9 @@ const updateBook = async (req, res) => {
 
     var isOwnerOfBook = await book.isOwnerOfBook(bookId, req.user.id)
     if(!isOwnerOfBook) {
-        res.status(500).json({
+        res.status(403).json({
             success: false,
-            message: `only owner can delete this book`,
+            message: `only owner can update this book`,
             data: {}
         })
         return;

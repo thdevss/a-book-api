@@ -92,10 +92,33 @@ const ratingValidation = checkSchema({
     }
 });
 
+const addressValidation = checkSchema({
+    address_1: {
+        notEmpty: true,
+    },
+    address_sub_district: {
+        notEmpty: true,
+    },
+    address_district: {
+        notEmpty: true,
+    },
+    address_province: {
+        notEmpty: true,
+    },
+    address_postel_code: {
+        notEmpty: true,
+    },
+    address_country: {
+        notEmpty: true,
+    },
+});
+
+
 module.exports = {
     registerValidation,
     loginValidation,
     addToCartValidation,
     orderValidation,
-    ratingValidation
+    ratingValidation,
+    addressValidation
 };

@@ -25,7 +25,7 @@ const previewBeforeOrder = async (req, res) => {
         });
         return;
     }
-    console.log(result)
+
     res.status(200).json({
         success: false,
         message: result.message,
@@ -61,7 +61,7 @@ const createNewOrder = async (req, res) => {
     }
     console.log(result)
 
-    res.status(200).json({
+    res.status(500).json({
         success: false,
         message: result.message,
         id: 0
