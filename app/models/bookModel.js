@@ -1,12 +1,18 @@
 const conn = require('../configs/database.config.js');
 
-const getAllBooks = async (limit = 10, offset = 0, order = null) => {
+const getAllBooks = async (limit = 10, offset = 0, order = null, name = null) => {
     let query_str = `SELECT * FROM tb_book WHERE (is_delete = 0 AND is_active = 1) `
     let query_data = [];
+    
+    if(name) {
+        query_str += ` AND name LIKE '%?%' `
+        query_data.push(name)
+    }
 
     if(order) {
         if(order == 'topsellers') {
-
+            query_str = query_str.replace("* FROM tb_book ", "tb_book.*, sum(quantity) as total_qty FROM tb_book LEFT JOIN `tb_order_detail` ON tb_order_detail.book_id = tb_book.id ")
+            query_str += ` GROUP BY tb_book.id ORDER BY total_qty DESC `
         } else if(order == 'recommeneded') {
             // from rating value
             query_str += ` ORDER BY rating_value DESC`

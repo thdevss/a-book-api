@@ -5,9 +5,11 @@ const allBook = async (req, res) => {
     var book_filter = {
         limit: (typeof req.query.limit  != 'undefined')? (parseInt(req.query.limit) || 0) : 10,
         offset: (typeof req.query.offset != 'undefined') ? (parseInt(req.query.offset) || 0) : 0,
-        order: (typeof req.query.order != 'undefined') ? req.query.order : null
+        order: (typeof req.query.order != 'undefined') ? req.query.order : null,
+        name: (typeof req.query.name != 'undefined') ? req.query.name : null
+
     }
-    var rows = await book.getAllBooks(book_filter.limit, book_filter.offset, book_filter.order);
+    var rows = await book.getAllBooks(book_filter.limit, book_filter.offset, book_filter.order, book_filter.name);
 
     if(rows.length > 0) {
         return res.json({
