@@ -31,7 +31,7 @@ const addNewAddress = async (req, res) => {
         });
     }
 
-    var isDefault = (parseInt(req.body.is_default))
+    var isDefault = (Number(req.body.is_default))
 
     var result = await userAddressModel.addNewAddress(
         req.user.id,

@@ -229,7 +229,7 @@ const updateBook = async (req, res) => {
         return;
     }
 
-    var isActive = (parseInt(req.body.is_active))
+    var isActive = (Number(req.body.is_active))
     if(isActive != 0 && isActive != 1) {
         res.status(400).json({
             success: false,
