@@ -63,8 +63,9 @@ const addNewAddress = async (userId = 0, address1 = null, address2 = null, addre
     }
 
     // check user has other address ?, for set default
-    const [ rows_address ] = await conn.execute(`SELECT COUNT(*) as count FROM tb_user_address WHERE user_id = ?`, [ userId ]);
-    if(rows_address[0].count > 0) {
+    const [ rows_address ] = await conn.execute(`SELECT id FROM tb_user_address WHERE user_id = ?`, [ userId ]);
+    // if(rows_address[0].count > 0) {
+    if(rows_address.length > 0) {
         if(is_default == 1) {
             // unset is_default all user's row
             await conn.execute(`UPDATE tb_user_address SET is_default = 0 WHERE user_id = ?`, [ userId ]);
