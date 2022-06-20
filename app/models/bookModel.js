@@ -168,10 +168,13 @@ const deleteBook = async (bookId = 0, userId = 0) => {
 const addNewBook = async (bookISBN = null, bookName = null, bookDescription = null, bookPrice = 0, bookDiscountPercent = 0, userId = 0) => {
 
 
-    let query_str = `INSERT INTO tb_book (name, isbn, description, price, discount_percent, user_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())`
+    let query_str = `
+        INSERT INTO tb_book 
+        (name, isbn, description, price, discount_percent, user_id, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, NOW())`
     let query_data = [
-        bookISBN,
         bookName,
+        bookISBN,
         bookDescription,
         bookPrice,
         bookDiscountPercent,
