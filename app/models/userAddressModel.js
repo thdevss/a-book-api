@@ -72,6 +72,11 @@ const addNewAddress = async (userId = 0, address1 = null, address2 = null, addre
         } else {
             is_default = 0;
         }
+    } else {
+        // if first address, force for this to default address
+        if(is_default == 0) {
+            is_default = 1;
+        }
     }
 
     let query_str = `INSERT INTO tb_user_address (user_id, address_1, address_2, address_sub_district, address_district, address_province, address_postel_code, address_country, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
