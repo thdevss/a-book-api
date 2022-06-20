@@ -5,8 +5,8 @@ const getAllBooks = async (limit = 10, offset = 0, order = null, name = null) =>
     let query_data = [];
     
     if(name) {
-        query_str += ` AND name LIKE '%?%' `
-        query_data.push(name)
+        query_str += ` AND name LIKE ? `
+        query_data.push(`%${name}%`)
     }
 
     if(order) {
