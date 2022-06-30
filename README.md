@@ -36,3 +36,14 @@ Tech Stack
 ``` # docker build . -t a-book-api ```
 >
 ``` # docker run -p 8888:3000 --env-file ./.env a-book-api ```
+
+## To-do Lists
+- Seperate User Role: 
+    - Administrator -- (They can manage book, order, user info)
+    - Publisher -- (They can manage book only)
+    - Seller -- (They can manage order only)
+    - User (customer) -- (They can manage itself's info only)
+- add: Book Category / Publisher / Book tag
+- add: Payment API after checkout.
+- add: Store Back-office
+- add: Store Front-end
